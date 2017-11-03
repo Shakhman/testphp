@@ -13,10 +13,10 @@ spl_autoload_register(function($className) {
 		'/components/',
 		'/controllers/'
 	];
+	
 	foreach ($array_path as $path) {
 		$path = ROOT . $path . $className . '.php';
-		if (is_file($path)) {
-			include_once $path;
-		}
+		
+		if (is_file($path)) include_once $path;
 	}
 });

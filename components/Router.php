@@ -34,20 +34,21 @@ class Router
 	public function run ()
 	{
 		$uri = $this->getURI();
+		$result = null;
+		
 		foreach ($this->routesArr as $uriPattern => $path) {
 			if ($uri === $uriPattern) {
 				$segments = explode('/', $path);
 				$controllerName = ucfirst(array_shift($segments)) . 'Controller';
 				$actionName = array_shift($segments);
 				$controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
-				if (file_exists($controllerFile)) {
-					include_once($controllerFile);
-				}
+				
+				if (file_exists($controllerFile)) include_once($controllerFile);
+				
 				$controllerObj = new $controllerName;
 				$result = call_user_func_array([$controllerObj, $actionName], $segments);
-				if ($result !== null) {
-					break;
-				}
+				
+				if ($result !== null) break;
 				
 				return $result;
 			}

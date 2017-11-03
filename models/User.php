@@ -67,6 +67,7 @@ class User
 		$stmt = $db->prepare("SELECT * FROM `users` WHERE email = :email");
 		$stmt->bindParam(':email', $email);
 		$stmt->execute();
+		
 		if ($stmt->rowCount() > 0) {
 			$user = $stmt->fetchAll();
 			
