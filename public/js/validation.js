@@ -20,7 +20,8 @@ $(document).ready(function () {
             isNotSelected: 'Выберите район'
         },
         common: {
-            isEmpty: 'Заполните поле'
+            isEmpty: 'Заполните поле',
+            isLong: 'Поле не должно превышать 50 символов'
         }
     };
 
@@ -40,6 +41,8 @@ $(document).ready(function () {
     // Validation
     $('#button').click(function () {
 
+        $districtLength = $('#district option:selected').length;
+
         // Validate Name
         if ($name.val().length === 0) {
             $('#name').prev().text($errorsObj.common.isEmpty).show();
@@ -48,8 +51,13 @@ $(document).ready(function () {
         else if ($name.val().length <= 3) {
             $('#name').prev().text($errorsObj.name.isShort).show();
             return false;
-        } else if ($name.val().match(/[0-9]/g)) {
+        }
+        else if ($name.val().match(/[0-9]/g)) {
             $('#name').prev().text($errorsObj.name.hasNumber).show();
+            return false;
+        }
+        else if ($name.val().length >= 50) {
+            $('#name').prev().text($errorsObj.common.isLong).show();
             return false;
         }
         else {
@@ -65,6 +73,10 @@ $(document).ready(function () {
             $('#email').prev().text($errorsObj.email.notValid).show();
             return false;
         }
+        else if ($email.val().length >= 50) {
+            $('#email').prev().text($errorsObj.common.isLong).show();
+            return false;
+        }
         else {
             $('#email').prev().text('').hide();
         }
@@ -73,15 +85,17 @@ $(document).ready(function () {
         if ($('#state option:selected').val() === $errorsObj.state.isNotSelected) {
             $('#state').prev().text($errorsObj.state.isNotSelected).show();
             return false;
-        } else {
+        }
+        else {
             $('#state').prev().text('').hide();
         }
 
         // Validate City
-        if ($('#city option:selected').val() === $errorsObj.city.isNotSelected) {
+        if ($('#city option:selected').val() === $errorsObj.city.isNotSelected && !$districtLength) {
             $('#city').prev().text($errorsObj.city.isNotSelected).show();
             return false;
-        } else {
+        }
+        else {
             $('#city').prev().text('').hide();
         }
 
@@ -89,7 +103,8 @@ $(document).ready(function () {
         if ($('#district option:selected').val() === $errorsObj.district.isNotSelected) {
             $('#district').prev().text($errorsObj.district.isNotSelected).show();
             return false;
-        } else {
+        }
+        else {
             $('#district').prev().text('').hide();
         }
 
@@ -99,6 +114,7 @@ $(document).ready(function () {
         $stateVal = $('#state').val();
         $cityVal = $('#city').val();
         $districtVal = $('#district').val();
+
 
         // Submit Form
         $.ajax({
@@ -123,6 +139,9 @@ $(document).ready(function () {
                 }
                 alert('Вы успешно зарегистрировались');
                 location.reload();
+            },
+            error: function (data) {
+                console.log(data.responseText);
             }
         });
     });

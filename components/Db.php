@@ -12,6 +12,11 @@ class Db
 	public static function getConnection ()
 	{
 		$paramsPath = ROOT . '/config/db.php';
+		
+		if (!is_file($paramsPath)) {
+			$paramsPath = ROOT . '/config/db.example.php';
+		}
+		
 		$params = require($paramsPath);
 		
 		try {

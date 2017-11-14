@@ -25,7 +25,7 @@ class TerritoryController
 	 * Display All Cities By Selected State
 	 * @return string
 	 */
-	public function listCities (): string
+	public function listCities(): string
 	{
 		$cities = Territory::getCities();
 		print_r($cities);
@@ -37,7 +37,7 @@ class TerritoryController
 	 * Display All Districts By Selected City
 	 * @return string
 	 */
-	public function listDistricts (): string
+	public function listDistricts(): string
 	{
 		$districts = Territory::getDistricts();
 		print_r($districts);

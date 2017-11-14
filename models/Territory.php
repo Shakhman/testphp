@@ -14,14 +14,14 @@ class Territory
 	 *
 	 * @return string
 	 */
-	public static function getAllStates (): string
+	public static function getAllStates(): string
 	{
 		$result = [];
 		$db = DB::getConnection();
-		$query = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(`ter_address`, ',', -1)) FROM `t_koatuu_tree` WHERE (`ter_address` LIKE '%область%' OR `ter_address` LIKE 'Автономна Республіка Крим')";
+		$query = "SELECT `ter_name`, `reg_id`, `ter_id` FROM `t_koatuu_tree` WHERE `ter_type_id` = 0 ORDER BY `ter_name`";
 		
 		foreach ($db->query($query) as $row) {
-			$result[] = $row[0];
+			$result[] = $row;
 		}
 		
 		return json_encode($result);
@@ -32,18 +32,18 @@ class Territory
 	 *
 	 * @return string
 	 */
-	public static function getCities (): string
+	public static function getCities(): string
 	{
 		$result = [];
 		
-		if (isset($_POST['state'])) {
+		if (isset($_POST['regId'])) {
 			
-			$state = $_POST['state'];
+			$regId = $_POST['regId'];
 			$db = DB::getConnection();
-			$sql = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(`ter_address`, ',', 1), ',', 2)) as city FROM `t_koatuu_tree` WHERE (`ter_address` LIKE '%{$state}%' AND `ter_address` LIKE '%м.%' AND `ter_address` NOT LIKE '%район%') ORDER BY `city`";
+			$sql = "SELECT `ter_name`, `ter_id` FROM `t_koatuu_tree` WHERE `reg_id` = {$regId} AND (`ter_type_id` = 1 OR `ter_type_id` = 6 OR `ter_type_id` = 5 OR `ter_type_id` = 4) ORDER BY `ter_name`";
 			
 			foreach ($db->query($sql) as $row) {
-				$result[] = $row[0];
+				$result[] = $row;
 			}
 		}
 		
@@ -55,15 +55,15 @@ class Territory
 	 *
 	 * @return string
 	 */
-	public static function getDistricts (): string
+	public static function getDistricts(): string
 	{
 		$result = [];
 		
-		if (isset($_POST['city'])) {
+		if (isset($_POST['ter_id'])) {
 			
-			$city = $_POST['city'];
+			$terId = $_POST['ter_id'];
 			$db = DB::getConnection();
-			$sql = "SELECT DISTINCT TRIM(SUBSTRING_INDEX(`ter_address`, ',', 1)) FROM `t_koatuu_tree` WHERE (`ter_address` LIKE '%{$city}%' AND SUBSTRING_INDEX(`ter_address`, ',', 1) LIKE '%район%')";
+			$sql = "SELECT `ter_name` FROM `t_koatuu_tree` WHERE `ter_pid` = {$terId} AND (`ter_type_id` = 2 OR `ter_type_id` = 3) ORDER BY `ter_name`";
 			
 			foreach ($db->query($sql) as $row) {
 				$result[] = $row[0];

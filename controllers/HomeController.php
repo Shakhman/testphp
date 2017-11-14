@@ -14,7 +14,7 @@ class HomeController
 	 *
 	 * @return mixed
 	 */
-	public function index ()
+	public function index()
 	{
 		return require_once(ROOT . '/views/home.view.php');
 	}

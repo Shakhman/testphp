@@ -17,7 +17,7 @@ class UserController
 	 * Register User
 	 * @return mixed|void
 	 */
-	public function register ()
+	public function register()
 	{
 		if (!empty($_POST)) {
 			$name = htmlspecialchars_decode(mb_convert_case(trim($_POST['name'], ' '), MB_CASE_TITLE, "UTF-8"));
@@ -28,7 +28,14 @@ class UserController
 			
 			$this->name = $name;
 			$this->email = $email;
-			!empty($_POST['district']) ? $this->territory = $state . ', ' . $city . ', ' . $district : $this->territory = $state . ', ' . $city;
+			
+			if (empty($_POST['district'])) {
+				$this->territory = $state . ', ' . $city;
+			} elseif (empty($_POST['city'])) {
+				$this->territory = $state . ', ' . $district;
+			} else {
+				$this->territory = $state . ', ' . $city . ', ' . $district;
+			}
 			
 			User::createTableIfNotExists();
 			

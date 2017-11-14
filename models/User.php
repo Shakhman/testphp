@@ -18,12 +18,11 @@ class User
 			$db = DB::getConnection();
 			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$sql = "CREATE TABLE IF NOT EXISTS `users` (
-        	`id` BIGINT NOT NULL AUTO_INCREMENT,
-        	`name` CHAR(100) NOT NULL,
-        	`email` CHAR(100) NOT NULL,
-        	`territory` CHAR(200) NOT NULL,
-        	PRIMARY KEY(`id`)
-    		)";
+        	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        	`name` VARCHAR(50) NOT NULL,
+        	`email` VARCHAR(50) NOT NULL,
+        	`territory` VARCHAR(128) NOT NULL
+        	) CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 			$db->exec($sql);
 		} catch (PDOException $e) {
 			echo $e->getMessage();
@@ -60,7 +59,7 @@ class User
 	 *
 	 * @return array|bool
 	 */
-	public static function checkUserViaEmail ($email)
+	public static function checkUserViaEmail($email)
 	{
 		$db = Db::getConnection();
 		
