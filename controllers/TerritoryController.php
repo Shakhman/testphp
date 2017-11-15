@@ -7,41 +7,49 @@
  * Time: 00:14
  */
 
-class TerritoryController
+class TerritoryController extends Controller
 {
+	protected $modelName = 'Territory';
+	
 	/**
 	 * Display All States
-	 * @return string
+	 *
+	 * @return boolean
 	 */
-	public function listStates (): string
+	public function listStates(): bool
 	{
-		$states = Territory::getAllStates();
+		$territoryModel = $this->model($this->modelName);
+		$states = $territoryModel->getAllStates();
 		print_r($states);
 		
-		return $states;
+		return true;
 	}
 	
 	/**
 	 * Display All Cities By Selected State
-	 * @return string
+	 *
+	 * @return boolean
 	 */
-	public function listCities(): string
+	public function listCities(): bool
 	{
-		$cities = Territory::getCities();
+		$territoryModel = $this->model($this->modelName);
+		$cities = $territoryModel->getCities();
 		print_r($cities);
 		
-		return $cities;
+		return true;
 	}
 	
 	/**
 	 * Display All Districts By Selected City
-	 * @return string
+	 *
+	 * @return boolean
 	 */
-	public function listDistricts(): string
+	public function listDistricts(): bool
 	{
-		$districts = Territory::getDistricts();
+		$territoryModel = $this->model($this->modelName);
+		$districts = $territoryModel->getDistricts();
 		print_r($districts);
 		
-		return $districts;
+		return true;
 	}
 }

@@ -7,7 +7,7 @@
  * Time: 14:54
  */
 
-class HomeController
+class HomeController extends Controller
 {
 	/**
 	 * Main Action For Homepage
@@ -16,6 +16,6 @@ class HomeController
 	 */
 	public function index()
 	{
-		return require_once(ROOT . '/views/home.view.php');
+		return $this->view('home');
 	}
 }

@@ -1,5 +1,4 @@
 <?php
-
 return [
 	''                   => 'home/index',
 	'user/register'      => 'user/register',

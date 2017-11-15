@@ -14,7 +14,7 @@ class Router
 	/**
 	 * Include All Routes From Config File.
 	 */
-	public function __construct ()
+	public function __construct()
 	{
 		$routesPath = ROOT . '/config/routes.php';
 		$this->routesArr = include($routesPath);
@@ -24,14 +24,19 @@ class Router
 	 * Get Request URI
 	 * @return string
 	 */
-	private function getURI (): string
+	private function getURI(): string
 	{
 		if (!empty($_SERVER['REQUEST_URI'])) {
 			return trim($_SERVER['REQUEST_URI'], '/');
 		}
 	}
 	
-	public function run ()
+	/**
+	 * Run The Route
+	 *
+	 * @return mixed|null
+	 */
+	public function run()
 	{
 		$uri = $this->getURI();
 		$result = null;

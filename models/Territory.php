@@ -7,69 +7,54 @@
  * Time: 12:41
  */
 
-class Territory
+class Territory extends Model
 {
+	protected $tableName = 't_koatuu_tree';
+	
 	/**
-	 * Get All Unique States
+	 * Get All States
 	 *
 	 * @return string
 	 */
-	public static function getAllStates(): string
+	public function getAllStates(): string
 	{
-		$result = [];
-		$db = DB::getConnection();
-		$query = "SELECT `ter_name`, `reg_id`, `ter_id` FROM `t_koatuu_tree` WHERE `ter_type_id` = 0 ORDER BY `ter_name`";
+		$sql = "SELECT `ter_name`, `reg_id`, `ter_id` FROM {$this->tableName} WHERE `ter_type_id` = 0 ORDER BY `ter_name`";
+		$states = $this->query($sql);
 		
-		foreach ($db->query($query) as $row) {
-			$result[] = $row;
-		}
-		
-		return json_encode($result);
+		return $states;
 	}
 	
 	/**
-	 * Get Unique Cities By Selected State
+	 * Get Cities By Selected State
 	 *
 	 * @return string
 	 */
-	public static function getCities(): string
+	public function getCities(): string
 	{
-		$result = [];
-		
 		if (isset($_POST['regId'])) {
-			
 			$regId = $_POST['regId'];
-			$db = DB::getConnection();
-			$sql = "SELECT `ter_name`, `ter_id` FROM `t_koatuu_tree` WHERE `reg_id` = {$regId} AND (`ter_type_id` = 1 OR `ter_type_id` = 6 OR `ter_type_id` = 5 OR `ter_type_id` = 4) ORDER BY `ter_name`";
 			
-			foreach ($db->query($sql) as $row) {
-				$result[] = $row;
-			}
+			$sql = "SELECT `ter_name`, `ter_id` FROM {$this->tableName} WHERE `reg_id` = {$regId} AND (`ter_type_id` = 1 OR `ter_type_id` = 6 OR `ter_type_id` = 5 OR `ter_type_id` = 4) ORDER BY `ter_name`";
+			$cities = $this->query($sql);
+			
+			return $cities;
 		}
-		
-		return json_encode($result);
 	}
 	
 	/**
-	 * Get Unique Districts By Selected City
+	 * Get Districts By Selected City
 	 *
 	 * @return string
 	 */
-	public static function getDistricts(): string
+	public function getDistricts(): string
 	{
-		$result = [];
-		
 		if (isset($_POST['ter_id'])) {
-			
 			$terId = $_POST['ter_id'];
-			$db = DB::getConnection();
-			$sql = "SELECT `ter_name` FROM `t_koatuu_tree` WHERE `ter_pid` = {$terId} AND (`ter_type_id` = 2 OR `ter_type_id` = 3) ORDER BY `ter_name`";
 			
-			foreach ($db->query($sql) as $row) {
-				$result[] = $row[0];
-			}
+			$sql = "SELECT `ter_name` FROM {$this->tableName} WHERE `ter_pid` = {$terId} AND (`ter_type_id` = 2 OR `ter_type_id` = 3) ORDER BY `ter_name`";
+			$districts = $this->query($sql);
+			
+			return $districts;
 		}
-		
-		return json_encode($result);
 	}
 }

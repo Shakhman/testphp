@@ -7,28 +7,9 @@
  * Time: 17:47
  */
 
-class User
+class User extends Model
 {
-	/**
-	 * Create Users Table
-	 */
-	public static function createTableIfNotExists ()
-	{
-		try {
-			$db = DB::getConnection();
-			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$sql = "CREATE TABLE IF NOT EXISTS `users` (
-        	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        	`name` VARCHAR(50) NOT NULL,
-        	`email` VARCHAR(50) NOT NULL,
-        	`territory` VARCHAR(128) NOT NULL
-        	) CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-			$db->exec($sql);
-		} catch (PDOException $e) {
-			echo $e->getMessage();
-			die;
-		}
-	}
+	protected $tableName = 'users';
 	
 	/**
 	 * Register New User
@@ -39,12 +20,12 @@ class User
 	 *
 	 * @return bool
 	 */
-	public static function registerUser ($name, $email, $territory): bool
+	public function registerNewUser(string $name, string $email, string $territory): bool
 	{
-		$db = Db::getConnection();
+		$this->createTableIfNotExists($this->tableName);
 		
-		$sql = "INSERT INTO `users` (name, email, territory) VALUES (:name, :email, :territory)";
-		$stmt = $db->prepare($sql);
+		$sql = "INSERT INTO {$this->tableName} (name, email, territory) VALUES (:name, :email, :territory)";
+		$stmt = $this->pdo->prepare($sql);
 		$stmt->bindParam(':name', $name, PDO::PARAM_STR);
 		$stmt->bindParam(':email', $email, PDO::PARAM_STR);
 		$stmt->bindParam(':territory', $territory, PDO::PARAM_STR);
@@ -59,11 +40,10 @@ class User
 	 *
 	 * @return array|bool
 	 */
-	public static function checkUserViaEmail($email)
+	public function checkUserViaEmail(string $email)
 	{
-		$db = Db::getConnection();
-		
-		$stmt = $db->prepare("SELECT * FROM `users` WHERE email = :email");
+		$sql = "SELECT * FROM {$this->tableName} WHERE email = :email";
+		$stmt = $this->pdo->prepare($sql);
 		$stmt->bindParam(':email', $email);
 		$stmt->execute();
 		

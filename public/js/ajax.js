@@ -40,10 +40,8 @@ $(document).ready(function () {
             success: function (data) {
                 if (data.length !== 0) {
                     $('#district').parent().hide();
-                    $('#city').empty();
-                    $('#district').empty();
-                    $('<option>').text('Выберите город').attr({
-                        disabled: true,
+                    $('#city, #district').empty();
+                    $('<option>').text('Выберите город').attr({disabled: true,
                         selected: true
                     }).appendTo('#city');
 
@@ -52,8 +50,7 @@ $(document).ready(function () {
                     });
                 }
                 else {
-                    $('#city').parent().hide();
-                    $('#city').text('');
+                    $('#city').text('').parent().hide();
                     $('#district').parent().show();
                 }
 
@@ -64,7 +61,7 @@ $(document).ready(function () {
         });
     });
 
-    // Change Event For Cities Select
+    // Change Event For States And Cities Select
     $('#city, #state').change(function () {
 
         $city = $(this).find('option:selected');
@@ -72,7 +69,7 @@ $(document).ready(function () {
         $('#city').prev().text('').hide();
         $('#district').empty();
 
-        // AJAX For Regions
+        // AJAX For Districts
         $.ajax({
             type: 'POST',
             url: 'territory/district',
@@ -83,14 +80,13 @@ $(document).ready(function () {
             success: function (data) {
                 if (data.length !== 0) {
                     $('#district').parent().show();
-                    $('#district').empty();
                     $('<option>').text('Выберите район').attr({
                         disabled: true,
                         selected: true
                     }).appendTo('#district');
 
                     $.each(data, function (key, value) {
-                        $('<option>').text(value).appendTo('#district');
+                        $('<option>').text(value['ter_name']).appendTo('#district');
                     });
                 }
                 else {

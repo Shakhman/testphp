@@ -11,7 +11,8 @@ spl_autoload_register(function($className) {
 	$array_path = [
 		'/models/',
 		'/components/',
-		'/controllers/'
+		'/controllers/',
+		'/core/',
 	];
 	
 	foreach ($array_path as $path) {

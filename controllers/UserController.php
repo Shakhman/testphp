@@ -7,14 +7,16 @@
  * Time: 17:47
  */
 
-class UserController
+class UserController extends Controller
 {
-	public $name = null;
-	public $email = null;
-	public $territory = null;
+	public $name;
+	public $email;
+	public $territory;
+	protected $modelName = 'User';
 	
 	/**
-	 * Register User
+	 * Register New User
+	 *
 	 * @return mixed|void
 	 */
 	public function register()
@@ -30,23 +32,36 @@ class UserController
 			$this->email = $email;
 			
 			if (empty($_POST['district'])) {
-				$this->territory = $state . ', ' . $city;
+				$this->territory = $city . ', ' . $state;
 			} elseif (empty($_POST['city'])) {
-				$this->territory = $state . ', ' . $district;
+				$this->territory = $district . ', ' . $state;
 			} else {
-				$this->territory = $state . ', ' . $city . ', ' . $district;
+				$this->territory = $district . ', ' . $city . ', ' . $state;
 			}
 			
-			User::createTableIfNotExists();
+			$this->checkUser();
+		}
+	}
+	
+	/**
+	 * Checking New User
+	 *
+	 * @return mixed
+	 */
+	public function checkUser()
+	{
+		$model = $this->model($this->modelName);
+		$checkingUser = $model->checkUserViaEmail($this->email);
+		
+		if (!$checkingUser) {
+			$user = $model->registerNewUser($this->name, $this->email, $this->territory);
+			print_r($user);
 			
-			// Checking User Email
-			if (!User::checkUserViaEmail($this->email)) {
-				$user = User::registerUser($this->name, $this->email, $this->territory);
-				print_r($user);
-			} else {
-				$user = User::checkUserViaEmail($this->email);
-				print_r($user);
-			}
+			return $user;
+		} else {
+			print_r($checkingUser);
+			
+			return $checkingUser;
 		}
 	}
 }
